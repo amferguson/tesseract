@@ -4,15 +4,30 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Tesseract.Interop
-{
+{		
     public unsafe static class LeptonicaApi
     {
         static LeptonicaApi()
         {
             // This may have already been loaded by tesseract but that's fine (EmbeddedDllLoader won't try and load the dll again).
-            WindowsLibraryLoader.Instance.LoadLibrary("liblept168.dll");
+            WindowsLibraryLoader.Instance.LoadLibrary(Constants.LeptonicaDllName);
         }
 
+		#region PixA
+		
+        [DllImport(Constants.LeptonicaDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pixaReadMultipageTiff")]
+        public static extern IntPtr pixaReadMultipageTiff( string filename );
+			
+        [DllImport(Constants.LeptonicaDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pixaGetCount")]
+        public static extern int pixaGetCount( HandleRef pixa );
+
+        [DllImport(Constants.LeptonicaDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pixaGetPix")]
+        public static extern IntPtr pixaGetPix( HandleRef pixa, int index, PixArrayAccessType accesstype );
+				
+        [DllImport(Constants.LeptonicaDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pixaDestroy")]
+        public static extern void pixaDestroy(ref IntPtr pix);
+		
+		#endregion
 
         #region Pix
 
